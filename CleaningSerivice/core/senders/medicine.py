@@ -5,6 +5,7 @@ from core.models import AccountUser  # Import the AccountUser type
 
 import json
 
+
 def create_medicine(data, files) -> dict:
     """create medicine"""
     # data = data.dict()
@@ -15,15 +16,15 @@ def create_medicine(data, files) -> dict:
         serializer.save()
         return serializer.data
     return serializer.errors
-    
+
 
 def update_medicine(medicine, data):
-    """ Update a medicine
+    """Update a medicine
 
     Args:
         data (str):  post data to the with the required serive
         medicine (Service): Service instance
-        Return a serialized dict 
+        Return a serialized dict
     """
     serializer = MedicineSerializer(instance=medicine, data=data, partial=True)
     if serializer.is_valid():
@@ -31,14 +32,12 @@ def update_medicine(medicine, data):
         return serializer.data
     else:
         return None
-    
-    
+
+
 def send_all_medicines():
-    """Get all medicines from the database
-    """
+    """Get all medicines from the database"""
     medicines_queryset = get_all_medicine()
-    
-    
+
     serializer = MedicineSerializer(medicines_queryset, many=True)
 
     return serializer.data
@@ -55,15 +54,17 @@ def send_all_medicines_by_category(category: str):
     return serializer.data
 
 
-def order_medicine(user, medicine, quantity, address) -> dict:
+def order_medicine(full_name, medicine, quantity, address) -> dict:
     """Book a medicine
 
     Args:
         medicine (Service): Service instance
         user (AccountUser): AccountUser instance
         data (str): post data with required fields
-    """  
-    medicine = Order.objects.create(medicine=medicine, customer=user, quantity=quantity, address=address)
+    """
+    medicine = Order.objects.create(
+        medicine=medicine, full_name=full_name, quantity=quantity, address=address
+    )
     # for kwarg in data:
     #     if hasattr(medicine, kwarg):
     #         setattr(medicine, kwarg, data[kwarg])
@@ -71,6 +72,7 @@ def order_medicine(user, medicine, quantity, address) -> dict:
     medicine.save()
     serializer = OrderSerializer(medicine).data
     return serializer
+
 
 def get_order_by_id(order_id):
     """Get order by id
@@ -83,8 +85,8 @@ def get_order_by_id(order_id):
     except Order.DoesNotExist:
         return None
     return order
-    
-    
+
+
 def send_all_booked_medicine() -> dict:
     """Get all booked medicine
 
@@ -120,7 +122,6 @@ def send_ordered_medicine_by_docter(provider: AccountUser) -> dict:
     return serializer.data
 
 
-
 def create_category(data) -> dict:
     serializer = CategorySerializer(data=data)
     if serializer.is_valid():
@@ -129,6 +130,7 @@ def create_category(data) -> dict:
     else:
         return serializer.errors
 
+
 def update_category(category: Category, data) -> dict:
     serializer = CategorySerializer(instance=category, data=data, partial=True)
     if serializer.is_valid():
@@ -136,18 +138,20 @@ def update_category(category: Category, data) -> dict:
         return serializer.data
     else:
         return serializer.errors
-    
-    
 
-def create_feedback(review: str, medicine:Order, rating:str) -> dict:
+
+def create_feedback(review: str, medicine: Order, rating: str) -> dict:
     """Create feedback
 
     Args:
         data (str): post data with required fields
     """
-    medicine_feedback = ServiceFeedback.objects.create(medicine=medicine, rating=rating, review=review)
+    medicine_feedback = ServiceFeedback.objects.create(
+        medicine=medicine, rating=rating, review=review
+    )
     serializer = ServiceFeedbackSerialiazer(medicine_feedback)
     return serializer.data
+
 
 def all_profiles():
     """Get all profiles"""
@@ -155,8 +159,9 @@ def all_profiles():
     serializer = CleaningServiceUserProfileSerializer(queryset, many=True)
     return serializer.data
 
+
 def create_provider_balance(user, amount):
-    """ Create provider balance
+    """Create provider balance
 
     Args:
         user (CleaningServiceUser): CleaningServiceUser instance
@@ -168,7 +173,7 @@ def create_provider_balance(user, amount):
     transaction = Transaction.objects.create(user=user, balance=amount)
     return transaction
 
-# def update_provider_balance(transaction:Transaction, amount):
+    # def update_provider_balance(transaction:Transaction, amount):
     """ Update provider balance
 
     Args:
@@ -199,4 +204,3 @@ def update_category(category: Category, data) -> dict:
         return serializer.data
     else:
         return None
-    
