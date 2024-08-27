@@ -95,8 +95,7 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse(
-    "postgresql://pharmasys_db_user:sLjOvzLeSggUy2RTCDxFOeYmoeBtMnaY@dpg-cqicsiuehbks73brngu0-a.oregon-postgres.render.com/pharmasys_db"
+DATABASES["default"] = dj_database_url.parse('postgresql://ofori:FPwPdZXYOIT75MWFztdd2kjSopsUSVzI@dpg-cr74ib23esus738a7590-a.oregon-postgres.render.com/pharmacy_uj69'
 )
 
 # Password validation
